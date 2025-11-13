@@ -778,8 +778,8 @@ struct PdistKernelFunctor : public __SYCL_KER_CONFIG_CONVENTION__ {
   const int64_t n_;
   const int64_t m_;
   accscalar_t p_val_;
-  accscalar_t n2_val_;
-  accscalar_t n2_squared_minus_1_val_;
+  const double n2_val_;
+  const double n2_squared_minus_1_val_;
   scalar_t* out_data_;
   const scalar_t* in_data_;
   sycl_local_acc_t<scalar_t, 1> shared_;

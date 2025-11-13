@@ -5185,6 +5185,21 @@ else:
         # Will require 1249975000 float32s
         expected_cpu = torch.pdist(x, p=2)  # ~1250M * 4 bytes = 5 GB on CPU
         actual_cpu = torch.pdist(x.to(device), p=2).cpu()  # 5 GB on GPU + 5GB on CPU
+        close_mask = torch.isclose(expected_cpu, actual_cpu)
+        not_close_indices = torch.where(~close_mask)[0]
+        print(f"before not_close_indices in expected_cpu: {expected_cpu[not_close_indices[0]-10:not_close_indices[0]]}")
+        print(f"before not_close_indices in actual_cpu: {actual_cpu[not_close_indices[0]-10:not_close_indices[0]]}")
+        print(f"not_close_indices: {not_close_indices}")
+        print(f"not_close_indices top200: {not_close_indices[0:200]}")
+        print(f"not_close_indices size: {not_close_indices.size()}")
+        print(f"not close in expected_cpu top200: {expected_cpu[not_close_indices][0:200]}")
+        print(f"not close in actual_cpu top200: {actual_cpu[not_close_indices][0:200]}")
+        print(f"not_close_indices end200: {not_close_indices[-200:]}")
+        print(f"not close in expected_cpu end200: {expected_cpu[not_close_indices][-200:]}")
+        print(f"not close in actual_cpu end200: {actual_cpu[not_close_indices][-200:]}")
+
+        print(f"not close in expected_cpu: {expected_cpu[not_close_indices]}")
+        print(f"not close in actual_cpu: {actual_cpu[not_close_indices]}")
         # Workaround for large memory overhead of self.assertTrue (see #84944)
         self.assertTrue(torch.allclose(expected_cpu, actual_cpu))  # ~20GB in allclose
 
